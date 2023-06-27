@@ -1,0 +1,7 @@
+name=Simple Trolley Cart
+poster=poster.png
+id=SimpleTrolleyCart
+versionMin=41.51
+require=tsarslib
+description=Carts&Trolleys for best life.
+url=

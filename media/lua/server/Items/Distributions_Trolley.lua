@@ -1,0 +1,21 @@
+
+table.insert(ProceduralDistributions["list"]["GigamartTools"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["GigamartTools"].items, 1.5);
+table.insert(ProceduralDistributions["list"]["GigamartHousewares"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["GigamartHousewares"].items, 1.5);
+table.insert(ProceduralDistributions["list"]["CrateTools"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["CrateTools"].items, 1.5);	
+table.insert(ProceduralDistributions["list"]["CrateMetalwork"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["CrateMetalwork"].items, 0.5);	
+table.insert(ProceduralDistributions["list"]["StoreCounterBagsFancy"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["StoreCounterBagsFancy"].items, 1.5);
+table.insert(ProceduralDistributions["list"]["JanitorTools"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["JanitorTools"].items, 1);
+table.insert(ProceduralDistributions["list"]["CrateTools"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["CrateTools"].items, 1.5);
+table.insert(ProceduralDistributions["list"]["ToolStoreFarming"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["ToolStoreFarming"].items, 1.5);
+table.insert(ProceduralDistributions["list"]["ToolStoreMisc"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["ToolStoreMisc"].items, 1.5);
+table.insert(ProceduralDistributions["list"]["ToolStoreTools"].items, "SimpleTrolleyCart.CartContainer");
+table.insert(ProceduralDistributions["list"]["ToolStoreTools"].items, 1.5);

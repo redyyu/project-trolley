@@ -1,0 +1,29 @@
+module SimpleTrolleyCart
+{
+	imports {
+		Base
+	}
+
+	item CartContainer {
+		Weight = 5,
+		Type = Container,
+		DisplayCategory = Container,
+		Capacity = 42,
+		WeightReduction = 95,
+		DisplayName = Trolley Cart,
+		Icon = TrolleyCart,
+
+		PutInSound = PutItemInBag,
+
+		SurvivalGear  = TRUE,
+		EquippedNoSprint = TRUE,
+		RequiresEquippedBothHands = TRUE,
+		RunSpeedModifier = 0.75,
+        MetalValue = 65,
+
+		StaticModel = CartModel,
+		WorldStaticModel = CartModel,
+		ReplaceInPrimaryHand = Bag_CartModel_RHand holdingtrolleyright,
+    }
+
+}

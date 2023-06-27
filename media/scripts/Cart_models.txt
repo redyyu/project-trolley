@@ -1,0 +1,17 @@
+module Base
+{
+	
+	model CartModel
+	{
+		mesh = trolley|cart,
+		texture = cart,
+		scale = 1,
+		invertX = true,
+		attachment world
+		{
+			offset = 0.0000 0.0000 0.0000,
+			rotate = 0.0000 0.0000 0.0000,
+		}
+	}
+
+}
