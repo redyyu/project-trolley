@@ -10,7 +10,7 @@ function onTrolleyTick()
 		-- DO NOT switch item to present the cart is full or empty any more.
 		-- just use another neutralized 3d model to present (cant even tell) both full or empty.
 
-		-- Also, change to player can carry multiple cart in inventory same time, as more as they.
+		-- Also, change to player can carry multiple cart in inventory same time, as more as they can.
 		-- why not? cart not 100% WeightReduction now!
 
 
