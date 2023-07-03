@@ -1,0 +1,4 @@
+ContextMenu_EN = {
+	ContextMenu_TAKE_CART = "Take Cart",
+	ContextMenu_DROP_CART = "Drop Cart",
+}
