@@ -30,6 +30,8 @@ module SimpleTrolleyCart
 	recipe Renew Trooly Cart {
         SimpleTrolleyCart.CartContainer,
 
+		CanBeDoneFromFloor:true,
+
         Prop1: Source=1,
         Sound: Plastering,
         Result: SimpleTrolleyCart.CartContainer,
