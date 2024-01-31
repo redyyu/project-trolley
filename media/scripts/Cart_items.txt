@@ -5,10 +5,10 @@ module SimpleTrolleyCart
 	}
 
 	item CartContainer {
-		Weight = 6,
+		Weight = 4,
 		Type = Container,
 		DisplayCategory = Container,
-		Capacity = 60,
+		Capacity = 32,
 		WeightReduction = 98,
 		DisplayName = Trolley Cart,
 		Icon = TrolleyCart,
@@ -19,7 +19,7 @@ module SimpleTrolleyCart
 		EquippedNoSprint = TRUE,
 		RequiresEquippedBothHands = TRUE,
 		RunSpeedModifier = 0.75,
-        MetalValue = 65,
+        MetalValue = 40,
 
 		StaticModel = CartModel,
 		WorldStaticModel = CartModel,

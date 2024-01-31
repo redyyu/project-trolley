@@ -48,9 +48,9 @@ local function onTrolleyTick()
 						end
 					end
 				end
-			
+			end
 
-			-- Drop when not equip any way.
+			-- No need those, Drop when not equip any way.
 
 			-- elseif countTrolly(playerInv) == 1 then
 			-- 	for i = 1, #TROLLEY_TYPES do
@@ -61,8 +61,9 @@ local function onTrolleyTick()
 			-- 			getPlayerData(playerObj:getPlayerNum()).playerInventory:refreshBackpacks();
 			-- 		end
 			-- 	end
-			end
+			-- end
 
+			
 			-- Drop cart while do something.
 			if playerObj:getVariableString("righthandmask") == "holdingtrolleyright" then
 
@@ -135,6 +136,11 @@ end
 local function onDropTrolley(playerObj)
 	playerObj:setPrimaryHandItem(nil);
 	playerObj:setSecondaryHandItem(nil);
+	local pdata = getPlayerData(playerObj:getPlayerNum());
+	if pdata ~= nil then
+		pdata.playerInventory:refreshBackpacks();
+		pdata.lootInventory:refreshBackpacks();
+	end
 end
 
 
@@ -195,16 +201,54 @@ local function TrolleyOnFillWorldObjectContextMenu(player, context, worldobjects
 end
 
 
+-- local function TrolleyInventoryContextMenu(playerNumber, context, items)
+-- 	local playerObj = getSpecificPlayer(playerNumber);
+-- 	local items = ISInventoryPane.getActualItems(items)
+-- 	local item = items[1];
+
+-- 	if #items > 0 and hasTrollyName(item:getFullType()) then
+-- 		context:removeOptionByName(getText("ContextMenu_Equip_Two_Hands"))
+-- 		context:removeOptionByName(getText("ContextMenu_Unequip"))
+-- 		local old_option_update = context:getOptionFromName(getText("ContextMenu_Grab"))
+-- 		if old_option_update then
+-- 			context:updateOptionTsar(old_option_update.id, getText("ContextMenu_TAKE_CART"), playerObj, onEquipTrolley, item:getWorldItem())
+-- 			return
+-- 		end
+-- 	end
+	
+-- end
+
+
+local function onGrabTrolleyFromContainer(playerObj, item)
+	local container = item:getContainer();
+	playerObj:getInventory():AddItem(item);
+	container:Remove(item);
+	
+	local pdata = getPlayerData(playerObj:getPlayerNum());
+	if pdata ~= nil then
+		pdata.playerInventory:refreshBackpacks();
+		pdata.lootInventory:refreshBackpacks();
+	end
+end
+
+
 local function TrolleyInventoryContextMenu(playerNumber, context, items)
 	local playerObj = getSpecificPlayer(playerNumber);
 	local items = ISInventoryPane.getActualItems(items)
-	
-	if #items > 0 and hasTrollyName(items[1]:getFullType()) then
-		-- context:removeOptionByName(getText("ContextMenu_Grab"))
-		context:removeOptionByName(getText("ContextMenu_Equip_Two_Hands"))
-		context:removeOptionByName(getText("ContextMenu_Unequip"))
+
+	for _, item in ipairs(items) do
+		if item and hasTrollyName(item:getFullType()) then
+			context:removeOptionByName(getText("ContextMenu_Equip_Two_Hands"))
+			context:removeOptionByName(getText("ContextMenu_Unequip"))
+			if item:getContainer() then
+				local old_option_update = context:getOptionFromName(getText("ContextMenu_Grab"))
+				if old_option_update then
+					context:updateOptionTsar(old_option_update.id, getText("ContextMenu_GRAB_CONTAINER"), playerObj, onGrabTrolleyFromContainer, item)
+					return
+				end
+			end
+		end
 	end
-	
 end
 
 

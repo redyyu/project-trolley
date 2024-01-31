@@ -10,8 +10,7 @@ function ISTakeTrolley:isValid()
 	-- Check that the item wasn't picked up by a preceding action
 	if self.item == nil or self.item:getSquare() == nil then return false end
 	local destContainer = self.character:getInventory()
-	return destContainer:getItemCount("TMC.TrolleyContainer") == 0 and destContainer:getItemCount("TMC.TrolleyContainer2") == 0 and
-			destContainer:getItemCount("TMC.CartContainer") == 0 and destContainer:getItemCount("TMC.CartContainer2") == 0
+	return destContainer:getItemCount("SimpleTrolleyCart.CartContainer") == 0
 end
 
 function ISTakeTrolley:update()
