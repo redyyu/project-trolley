@@ -42,8 +42,9 @@ local function onTrolleyTick()
 						local _item = itemsArray:get(j)
 						if _item ~= playerObj:getPrimaryHandItem() then
 							playerInv:Remove(_item)
-							local dropX,dropY,dropZ = ISInventoryTransferAction.GetDropItemOffset(playerObj, playerObj:getCurrentSquare(), _item)
-							playerObj:getCurrentSquare():AddWorldInventoryItem(_item, dropX, dropY, dropZ);
+							-- local dropX,dropY,dropZ = ISInventoryTransferAction.GetDropItemOffset(playerObj, playerObj:getCurrentSquare(), _item)
+							local sq = playerObj:getCurrentSquare()
+							playerObj:getCurrentSquare():AddWorldInventoryItem(_item, sq:getX(), sq:getY(), sq:getZ());
 							break
 						end
 					end
