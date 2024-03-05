@@ -230,7 +230,7 @@ local function TrolleyInventoryContextMenu(playerNumber, context, items)
 					context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerObj, onEquipTrolley, item:getWorldItem())
 					return
 				else
-					context:addOptionOnTop(getText("ContextMenu_GRAB_CONTAINER"), playerObj, onGrabTrolleyFromContainer, item)
+					context:addOptionOnTop(getText("ContextMenu_GRAB_CART"), playerObj, onGrabTrolleyFromContainer, item)
 					return
 				end
 			end
