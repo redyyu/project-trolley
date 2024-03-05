@@ -18,16 +18,20 @@ module SimpleTrolleyCart
 		SurvivalGear  = TRUE,
 		EquippedNoSprint = TRUE,
 		RequiresEquippedBothHands = TRUE,
-		RunSpeedModifier = 0.75,
+		RunSpeedModifier = 0.45,
         MetalValue = 40,
 
-		StaticModel = CartModel,
-		WorldStaticModel = CartModel,
-		ReplaceInPrimaryHand = Bag_CartModel_RHand holdingtrolleyright,
+		StaticModel = TrolleyCart,
+		WorldStaticModel = TrolleyCart_Ground,
+
+		/* ReplaceInPrimaryHand = Bag_CartModel_RHand holdingtrolleyright, no clothingItem need, just give nothing. */
+		ReplaceInPrimaryHand = none holdingtrolleyright,
+
+		Tags = Trolley,
     }
 
 	/*
-	recipe Renew Trooly Cart {
+	recipe Renew Trolley Cart {
         SimpleTrolleyCart.CartContainer,
 
 		CanBeDoneFromFloor:true,

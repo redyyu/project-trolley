@@ -117,18 +117,6 @@
 		<node3>2</node3>
 	</m_2DBlendTri>
 	<m_Transitions>
-		<m_Target>sprinttrolleyright</m_Target>
-		<m_blendInTime>0.1</m_blendInTime>
-		<m_blendOutTime>0.2</m_blendOutTime>
-		<!-- <m_SpeedScale>0.3</m_SpeedScale> -->
-	</m_Transitions>
-	<m_Transitions>
-		<m_Target>aimtrolleyright</m_Target>
-		<m_blendInTime>0.1</m_blendInTime>
-		<m_blendOutTime>0.2</m_blendOutTime>
-		<!-- <m_SpeedScale>0.3</m_SpeedScale> -->
-	</m_Transitions>
-	<m_Transitions>
 		<m_Target>holdingtrolleyright</m_Target>
 		<m_blendInTime>0.1</m_blendInTime>
 		<m_blendOutTime>0.2</m_blendOutTime>

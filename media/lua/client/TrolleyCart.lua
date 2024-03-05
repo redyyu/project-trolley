@@ -20,6 +20,25 @@ local function countTrolly(playerInv)
 	return count
 end
 
+local function dropEquippedCart(playerObj, square)
+	local item = playerObj:getPrimaryHandItem()
+	if not square then
+		square = playerObj:getSquare()
+	end
+
+	if item and item:hasTag('Trolley') then
+		playerObj:getInventory():Remove(item)
+		local pdata = getPlayerData(playerObj:getPlayerNum());
+		if pdata ~= nil then
+			pdata.playerInventory:refreshBackpacks();
+			pdata.lootInventory:refreshBackpacks();
+		end
+		playerObj:setPrimaryHandItem(nil);
+		playerObj:setSecondaryHandItem(nil);
+		square:AddWorldInventoryItem(item, 0, 0, 0);
+	end
+end
+
 
 local function onTrolleyTick()
     local playersSum = getNumActivePlayers()
@@ -71,17 +90,7 @@ local function onTrolleyTick()
 				-- climb wall already in vanilla, just like taking a bag on hand.
 				if not (playerObj:getCurrentState() == IdleState.instance() or 
 						playerObj:getCurrentState() == PlayerAimState.instance()) then
-					local sqr = playerObj:getSquare()
-					local trol = playerObj:getPrimaryHandItem()
-					playerObj:getInventory():Remove(trol)
-					local pdata = getPlayerData(playerObj:getPlayerNum());
-					if pdata ~= nil then
-						pdata.playerInventory:refreshBackpacks();
-						pdata.lootInventory:refreshBackpacks();
-					end
-					playerObj:setPrimaryHandItem(nil);
-					playerObj:setSecondaryHandItem(nil);
-					sqr:AddWorldInventoryItem(trol, 0, 0, 0);
+					dropEquippedCart(playerObj)
 				end
 
 				-- forced drop Trolley cart while into a vehicle
@@ -91,16 +100,7 @@ local function onTrolleyTick()
 
 					if areaCenter then 
 						local sqr = getCell():getGridSquare(areaCenter:getX(), areaCenter:getY(), vehicle:getZ())
-						local trol = playerObj:getPrimaryHandItem()
-						playerObj:getInventory():Remove(trol)
-						local pdata = getPlayerData(playerObj:getPlayerNum());
-						if pdata ~= nil then
-							pdata.playerInventory:refreshBackpacks();
-							pdata.lootInventory:refreshBackpacks();
-						end
-						playerObj:setPrimaryHandItem(nil);
-						playerObj:setSecondaryHandItem(nil);
-						sqr:AddWorldInventoryItem(trol, 0, 0, 0);
+						dropEquippedCart(playerObj, sqr)
 					end
 				end
 			end
@@ -188,8 +188,8 @@ local function TrolleyOnFillWorldObjectContextMenu(player, context, worldobjects
 		if #worldObjTable == 0 then return false end
 
 		for _, obj in ipairs(worldObjTable) do
-			local trolleyName = obj:getItem():getFullType()
-			if hasTrollyName(trolleyName) then
+			local item = obj:getItem()
+			if item and item:hasTag('Trolley') then
 				local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))
 				if old_option then
 					context:removeOptionByName(old_option.id)
@@ -220,7 +220,7 @@ local function TrolleyInventoryContextMenu(playerNumber, context, items)
 	local items = ISInventoryPane.getActualItems(items)
 
 	for _, item in ipairs(items) do
-		if item and hasTrollyName(item:getFullType()) then
+		if item and item:hasTag('Trolley') then
 			context:removeOptionByName(getText("ContextMenu_Equip_Two_Hands"))
 			context:removeOptionByName(getText("ContextMenu_Unequip"))
 			local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))

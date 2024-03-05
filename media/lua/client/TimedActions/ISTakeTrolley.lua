@@ -9,8 +9,9 @@ ISTakeTrolley = ISBaseTimedAction:derive("ISTakeTrolley");
 function ISTakeTrolley:isValid()
 	-- Check that the item wasn't picked up by a preceding action
 	if self.item == nil or self.item:getSquare() == nil then return false end
-	local destContainer = self.character:getInventory()
-	return destContainer:getItemCount("SimpleTrolleyCart.CartContainer") == 0
+	-- no need check player has trolley in inventory here,
+	-- multiple trolly will drop anyway, from `onTrolleyTick`.
+	return true
 end
 
 function ISTakeTrolley:update()
@@ -31,7 +32,9 @@ function ISTakeTrolley:stop()
 end
 
 function ISTakeTrolley:perform()
-	forceDropHeavyItems(self.character)
+	-- forceDropHeavyItems(self.character)
+	-- from TimedActions/ISEquipWeaponAction.lua 
+	-- it is for drop Corps and Generator or any other item hasTag `HeavyItem` when using weapons.
 	local inventoryItem = self.item:getItem()
 	self.item:getSquare():transmitRemoveItemFromSquare(self.item);
 	self.item:removeFromWorld()
@@ -62,8 +65,7 @@ function ISTakeTrolley:new (character, item, time)
 	o.character = character;
 	o.item = item;
 	o.stopOnWalk = true;
-	o.stopOnRun = true;
-	-- print("time?")		   
+	o.stopOnRun = true;	   
 	o.maxTime = time;
 	o.loopedAction = true;
 	return o
