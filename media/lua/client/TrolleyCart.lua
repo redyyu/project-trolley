@@ -118,7 +118,7 @@ local function onEquipTrolley (playerObj, WItem)
 		if playerObj:getSecondaryHandItem() and playerObj:getSecondaryHandItem() ~= playerObj:getPrimaryHandItem() then
 			ISTimedActionQueue.add(ISUnequipAction:new(playerObj, playerObj:getSecondaryHandItem(), 50));
 		end
-		ISTimedActionQueue.add(ISTakeTrolley:new(playerObj, WItem, 1))
+		ISTimedActionQueue.add(ISTakeTrolley:new(playerObj, WItem, 50))
 	end
 end
 
