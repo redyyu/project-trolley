@@ -1,5 +1,5 @@
 ContextMenu_EN = {
 	ContextMenu_TAKE_CART = "Take Cart",
 	ContextMenu_DROP_CART = "Drop Cart",
-	ContextMenu_GRAB_CART = "Grab Cart"
+	ContextMenu_GRAB_CART_TO_FLOOR = "Grab Cart to floor"
 }
