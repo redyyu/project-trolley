@@ -224,8 +224,3 @@ Events.OnEnterVehicle.Add(Trolley.onEnterVehicle)
 
 Events.OnFillInventoryObjectContextMenu.Add(Trolley.doInventoryContextMenu)
 Events.OnFillWorldObjectContextMenu.Add(Trolley.doFillWorldObjectContextMenu)
-
-
-
-
-
