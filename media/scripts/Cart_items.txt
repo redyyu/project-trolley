@@ -32,7 +32,7 @@ module PROJTrolley
 
 	/*
 	recipe Renew Trolley Cart {
-        PROJTrolley.CartContainer,
+        keep pan,
 
 		CanBeDoneFromFloor:true,
 

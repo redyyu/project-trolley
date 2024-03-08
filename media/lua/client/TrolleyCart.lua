@@ -56,11 +56,11 @@ Trolley.onTrolleyUpdate = function (playerObj)
                     playerObj:getCurrentSquare():AddWorldInventoryItem(cart, ZombRand(0.1, 0.5), ZombRand(0.1, 0.5), 0)
                 end
             end
-        end
-        local pdata = getPlayerData(playerObj:getPlayerNum())
-        if pdata ~= nil then
-            pdata.playerInventory:refreshBackpacks()
-            pdata.lootInventory:refreshBackpacks()
+            local pdata = getPlayerData(playerObj:getPlayerNum())
+            if pdata ~= nil then
+                pdata.playerInventory:refreshBackpacks()
+                pdata.lootInventory:refreshBackpacks()
+            end
         end
         hasCart = true
     end
