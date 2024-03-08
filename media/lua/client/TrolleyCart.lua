@@ -24,14 +24,14 @@ Trolley.dropCart = function (playerObj, square)
 
     if item and item:hasTag('Trolley') then
         playerObj:getInventory():Remove(item)
-        local pdata = getPlayerData(playerObj:getPlayerNum());
+        local pdata = getPlayerData(playerObj:getPlayerNum())
         if pdata ~= nil then
-            pdata.playerInventory:refreshBackpacks();
-            pdata.lootInventory:refreshBackpacks();
+            pdata.playerInventory:refreshBackpacks()
+            pdata.lootInventory:refreshBackpacks()
         end
-        playerObj:setPrimaryHandItem(nil);
-        playerObj:setSecondaryHandItem(nil);
-        square:AddWorldInventoryItem(item, 0, 0, 0);
+        playerObj:setPrimaryHandItem(nil)
+        playerObj:setSecondaryHandItem(nil)
+        square:AddWorldInventoryItem(item, ZombRand(0.1, 0.5), ZombRand(0.1, 0.5), 0)
     end
 end
 
@@ -53,7 +53,7 @@ Trolley.onTrolleyUpdate = function (playerObj)
             for _, cart in ipairs(carts) do
                 if item ~= cart then
                     playerInv:Remove(cart)
-                    playerObj:getCurrentSquare():AddWorldInventoryItem(cart, 0, 0, 0)
+                    playerObj:getCurrentSquare():AddWorldInventoryItem(cart, ZombRand(0.1, 0.5), ZombRand(0.1, 0.5), 0)
                 end
             end
         end

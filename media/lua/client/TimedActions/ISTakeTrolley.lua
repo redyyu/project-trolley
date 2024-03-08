@@ -62,11 +62,11 @@ function ISTakeTrolley:new (character, item, time)
 	local o = {}
 	setmetatable(o, self)
 	self.__index = self
-	o.character = character;
-	o.item = item;
-	o.stopOnWalk = true;
-	o.stopOnRun = true;	   
-	o.maxTime = time;
-	o.loopedAction = true;
+	o.character = character
+	o.item = item
+	o.stopOnWalk = true
+	o.stopOnRun = true	   
+	o.maxTime = time
+	o.loopedAction = false
 	return o
 end

@@ -1,4 +1,4 @@
-module SimpleTrolleyCart
+module PROJTrolley
 {
     model TrolleyCart
     {

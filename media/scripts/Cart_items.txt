@@ -1,4 +1,4 @@
-module SimpleTrolleyCart
+module PROJTrolley
 {
 	imports {
 		Base
@@ -32,13 +32,13 @@ module SimpleTrolleyCart
 
 	/*
 	recipe Renew Trolley Cart {
-        SimpleTrolleyCart.CartContainer,
+        PROJTrolley.CartContainer,
 
 		CanBeDoneFromFloor:true,
 
         Prop1: Source=1,
         Sound: Plastering,
-        Result: SimpleTrolleyCart.CartContainer,
+        Result: PROJTrolley.CartContainer,
         Time: 300.0,
     }
 	*/
