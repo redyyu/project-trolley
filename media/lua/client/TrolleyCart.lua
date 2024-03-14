@@ -90,7 +90,7 @@ Trolley.onTrolleyUpdate = function (playerObj)
     local playerInv = playerObj:getInventory()
     local equippedCart = nil
 
-    for _, item in ipairs(Trolley.getTrolleysFromInvertory(playerInv)) do
+    for idx, item in ipairs(Trolley.getTrolleysFromInvertory(playerInv)) do
         -- DO NOT AUTO equipped, it will cause lot more logic prolbem,
         -- such as conflict with other MOD did samething.
         -- item will keep equip/unequip in millseconds, don't even see the action.
@@ -107,7 +107,9 @@ Trolley.onTrolleyUpdate = function (playerObj)
         if item:isEquipped() then
             equippedCart = item
         else
+            -- no cart in inventory while not equipped.
             Trolley.dropItemInsanely(playerObj, item)
+            playerObj:Say(getText('IGUI_PlayerText_Cant_Take_Cart_This_Way'))
         end
     end
 
@@ -153,39 +155,49 @@ Trolley.onEnterVehicle = function (playerObj)
 end
 
 
-Trolley.onEquipTrolley = function (playerNum, WItem)
+Trolley.onEquipTrolley = function (playerNum, item)
     local playerObj = getSpecificPlayer(playerNum)
-    if WItem:getSquare() and luautils.walkAdj(playerObj, WItem:getSquare()) then
+    local walk_to = nil
+    if item:getWorldItem() then
+        walk_to = luautils.walkAdj(playerObj, item:getWorldItem():getSquare())
+    elseif item:getContainer() then
+        walk_to = luautils.walkToContainer(bike:getContainer(), playerObj:getPlayerNum())
+    else
+        walk_to = luautils.walkAdj(playerObj, playerObj:getCurrentSquare())
+    end
+    
+    if walk_to then
         if playerObj:getPrimaryHandItem() then
             ISTimedActionQueue.add(ISUnequipAction:new(playerObj, playerObj:getPrimaryHandItem(), 50));
         end
         if playerObj:getSecondaryHandItem() and playerObj:getSecondaryHandItem() ~= playerObj:getPrimaryHandItem() then
             ISTimedActionQueue.add(ISUnequipAction:new(playerObj, playerObj:getSecondaryHandItem(), 50));
         end
-        ISTimedActionQueue.add(ISTakeTrolley:new(playerObj, WItem, 50))
+        ISTimedActionQueue.add(ISTakeTrolley:new(playerObj, item, 50))
     end
 end
 
+-- ISInventoryPaneContextMenu.equipHeavyItem = function(playerObj, item)
+--     if not luautils.walkToContainer(item:getContainer(), playerObj:getPlayerNum()) then
+--         return
+--     end
+--     if playerObj:getPrimaryHandItem() then
+--         ISTimedActionQueue.add(ISUnequipAction:new(playerObj, playerObj:getPrimaryHandItem(), 50));
+--     end
+--     if playerObj:getSecondaryHandItem() and playerObj:getSecondaryHandItem() ~= playerObj:getPrimaryHandItem() then
+--         ISTimedActionQueue.add(ISUnequipAction:new(playerObj, playerObj:getSecondaryHandItem(), 50));
+--     end
+--     ISTimedActionQueue.add(ISEquipHeavyItem:new(playerObj, item, 100));
+-- end
 
-Trolley.onUnequipTrolley = function (playerNum, item)
+
+-- Trolley.onUnequipTrolley = function (playerNum, item)
+--     ISInventoryPaneContextMenu.dropItem(item, playerNum)
+-- end
+
+
+Trolley.onGrabTrolleyToGround = function (playerNum, item)
     ISInventoryPaneContextMenu.dropItem(item, playerNum)
-end
-
-
-Trolley.onGrabTrolleyFromContainer = function (playerNum, item)
-    local playerObj = getSpecificPlayer(playerNum)
-    local container = item:getContainer()
-    local inventory = getPlayerInventory(playerNum).inventory
-
-    if inventory:hasRoomFor(playerObj, item) then
-        if item:getContainer() ~= inventory then
-			if luautils.walkToContainer(item:getContainer(), playerNum) then
-				ISTimedActionQueue.add(ISInventoryTransferAction:new(playerObj, item, item:getContainer(), inventory))
-			end
-		end
-    else
-        ISInventoryPaneContextMenu.dropItem(item, playerNum)
-    end
 end
 
 
@@ -204,12 +216,12 @@ Trolley.doFillWorldObjectContextMenu = function (playerNum, context, worldobject
         if #worldObjTable == 0 then return false end
 
         for _, obj in ipairs(worldObjTable) do
-            local item = obj:getItem()
+            local item = obj:getItem() -- obj is worldItem
             if item and item:hasTag('Trolley') then
                 local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))
                 if old_option then
                     context:removeOptionByName(old_option.name)
-                    context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onEquipTrolley, obj)
+                    context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onEquipTrolley, item)
                     return
                 end 
             end
@@ -229,21 +241,20 @@ Trolley.doInventoryContextMenu = function (playerNum, context, items)
             context:removeOptionByName(getText("ContextMenu_Equip_Two_Hands"))
             context:removeOptionByName(getText("ContextMenu_Unequip"))
 
-            -- local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))
-            -- NO Need this, `HeavyItem` don't have `Grab` option in Inventory.
-
-            if item ~= playerObj:getPrimaryHandItem() then
+            if playerObj:isHandItem(item) then
+                -- use native `Drop` is good enough.
+            else
+                -- local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))
+                -- NO Need this, `HeavyItem` don't have `Grab` option in Inventory.
                 -- context:removeOptionByName(old_option.name)
-                if item:getContainer():getType() == "floor" then
-                    context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onEquipTrolley, item:getWorldItem())
+                if playerObj:getInventory():hasRoomFor(playerObj, item) then
+                    context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onEquipTrolley, item)
                     return
                 else
-                    context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onGrabTrolleyFromContainer, item)
+                    context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onGrabTrolleyToGround, item)
                     return
                 end
             end
-
-            -- use native Drop.
         end
     end
 end
