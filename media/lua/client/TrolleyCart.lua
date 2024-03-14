@@ -161,7 +161,7 @@ Trolley.onEquipTrolley = function (playerNum, item)
     if item:getWorldItem() then
         walk_to = luautils.walkAdj(playerObj, item:getWorldItem():getSquare())
     elseif item:getContainer() then
-        walk_to = luautils.walkToContainer(bike:getContainer(), playerObj:getPlayerNum())
+        walk_to = luautils.walkToContainer(item:getContainer(), playerObj:getPlayerNum())
     else
         walk_to = luautils.walkAdj(playerObj, playerObj:getCurrentSquare())
     end
@@ -196,9 +196,9 @@ end
 -- end
 
 
-Trolley.onGrabTrolleyToGround = function (playerNum, item)
-    ISInventoryPaneContextMenu.dropItem(item, playerNum)
-end
+-- Trolley.onGrabTrolleyToGround = function (playerNum, item)
+--     ISInventoryPaneContextMenu.dropItem(item, playerNum)
+-- end
 
 
 Trolley.doFillWorldObjectContextMenu = function (playerNum, context, worldobjects, test)
@@ -247,13 +247,8 @@ Trolley.doInventoryContextMenu = function (playerNum, context, items)
                 -- local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))
                 -- NO Need this, `HeavyItem` don't have `Grab` option in Inventory.
                 -- context:removeOptionByName(old_option.name)
-                if playerObj:getInventory():hasRoomFor(playerObj, item) then
-                    context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onEquipTrolley, item)
-                    return
-                else
-                    context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onGrabTrolleyToGround, item)
-                    return
-                end
+                context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onEquipTrolley, item)
+                return
             end
         end
     end
