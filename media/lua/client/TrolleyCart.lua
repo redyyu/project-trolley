@@ -1,22 +1,22 @@
 require "TimedActions/ISTimedActionQueue"
+require "TimedActions/ISInventoryTransferAction"
 
 local seatNameTable = {"SeatFrontLeft", "SeatFrontRight", "SeatMiddleLeft", "SeatMiddleRight", "SeatRearLeft", "SeatRearRight"}
 
 local Trolley = {}
 
 
-Trolley.getCartsFromInvertory = function (playerInv)
-    local carts = {}
-    local items = playerInv:getItemsFromCategory('Container')
-    for i = 0, items:size() - 1 do
-        local item = items:get(i)
+Trolley.getTrolleysFromInvertory = function (playerInv)
+    local trolley_items = {}
+    local items = playerInv:getItems()
+    for j = 0, items:size() - 1 do
+        local item = items:get(j)
         if item:hasTag('Trolley') then
-            table.insert(carts, item)
+            table.insert(trolley_items, item)
         end
     end
-    return carts
+    return trolley_items
 end
-
 
 
 Trolley.parseWorldObjects = function (worldobjects, playerNum)
@@ -60,42 +60,54 @@ Trolley.parseWorldObjects = function (worldobjects, playerNum)
 end
 
 
-Trolley.dropCartInsanely = function (playerObj, item, square)
-    if not item then
-        item = playerObj:getPrimaryHandItem()
-    end
-    if not square then
-        square = playerObj:getSquare()
-    end
+Trolley.dropItemInsanely = function (playerObj, item, square)
+    if playerObj and item then
+        if not square then
+            square = playerObj:getSquare()
+        end
 
-    if item and item:hasTag('Trolley') then
-        playerObj:setPrimaryHandItem(nil)
-        playerObj:setSecondaryHandItem(nil)
+        if item == playerObj:getPrimaryHandItem() then
+            playerObj:setPrimaryHandItem(nil)
+        end
+        if item == playerObj:getSecondaryHandItem() then
+            playerObj:setSecondaryHandItem(nil)
+        end
+        
         playerObj:getInventory():Remove(item)
-        local pdata = getPlayerData(playerObj:getPlayerNum())
+        local dropX,dropY,dropZ = ISInventoryTransferAction.GetDropItemOffset(playerObj, playerObj:getCurrentSquare(), primary)
+        playerObj:getCurrentSquare():AddWorldInventoryItem(item, dropX, dropY, dropZ)
+
+        local pdata = getPlayerData(playerObj:getPlayerNum());
         if pdata ~= nil then
             pdata.playerInventory:refreshBackpacks()
             pdata.lootInventory:refreshBackpacks()
         end
-        square:AddWorldInventoryItem(item, ZombRand(0.1, 0.5), ZombRand(0.1, 0.5), 0)
     end
 end
 
 
 Trolley.onTrolleyUpdate = function (playerObj)
     local playerInv = playerObj:getInventory()
-    local carts = Trolley.getCartsFromInvertory(playerInv)
     local equippedCart = nil
 
-    if playerObj:getPrimaryHandItem() and playerObj:getPrimaryHandItem():hasTag('Trolley') then
-        equippedCart = playerObj:getPrimaryHandItem()
-    end
+    for _, item in ipairs(Trolley.getTrolleysFromInvertory(playerInv)) do
+        -- DO NOT AUTO equipped, it will cause lot more logic prolbem,
+        -- such as conflict with other MOD did samething.
+        -- item will keep equip/unequip in millseconds, don't even see the action.
+        -- unless check the log.
 
-    -- Drop unequipped carts. unless it is in bag.
-    for idx, cart in ipairs(carts) do
-        if equippedCart ~= cart then
-            Trolley.dropCartInsanely(playerObj, cart)
-            playerObj:Say(getText("IGUI_PlayerText_Cant_Take_Cart_This_Way"))
+        -- equip first Trolley when no Trolley equipped.
+        -- if not equippedCart and item:hasTag('Trolley') then
+        --     playerObj:setPrimaryHandItem(item)
+        --     playerObj:setSecondaryHandItem(item)
+        --     equippedCart = item
+        -- end
+
+        -- drop any Trolley not equipped.
+        if item:isEquipped() then
+            equippedCart = item
+        else
+            Trolley.dropItemInsanely(playerObj, item)
         end
     end
 
@@ -120,7 +132,7 @@ Trolley.onTrolleyUpdate = function (playerObj)
         else -- Drop cart while do something else.
             -- DO NOT `ISTimedActionQueue.isPlayerDoingAction(playerObj)` this not enough.
             -- forced drop cart while climb window or fence, and others actions.
-            Trolley.dropCartInsanely(playerObj)
+            Trolley.dropItemInsanely(playerObj, equippedCart)
         end
     end
 
@@ -128,12 +140,15 @@ end
 
 
 Trolley.onEnterVehicle = function (playerObj)
-    local vehicle = playerObj:getVehicle()
-    local areaCenter = vehicle:getAreaCenter(seatNameTable[vehicle:getSeat(playerObj)+1])
+    if playerObj:getPrimaryHandItem() and playerObj:getPrimaryHandItem():hasTag('Trolley') then
+        local equippedCart = playerObj:getPrimaryHandItem()
+        local vehicle = playerObj:getVehicle()
+        local areaCenter = vehicle:getAreaCenter(seatNameTable[vehicle:getSeat(playerObj)+1])
 
-    if areaCenter then 
-        local sqr = getCell():getGridSquare(areaCenter:getX(), areaCenter:getY(), vehicle:getZ())
-        Trolley.dropCartInsanely(playerObj, nil, sqr)
+        if areaCenter then
+            local sqr = getCell():getGridSquare(areaCenter:getX(), areaCenter:getY(), vehicle:getZ())
+            Trolley.dropItemInsanely(playerObj, equippedCart, sqr)
+        end
     end
 end
 
@@ -178,8 +193,11 @@ Trolley.doFillWorldObjectContextMenu = function (playerNum, context, worldobject
     local playerObj = getSpecificPlayer(playerNum)
     local item = playerObj:getPrimaryHandItem()
 
+    -- Trolly Item has tag `HeavyItem`, native will take care many things.
+
     if item and item:hasTag('Trolley') then
-        context:addOptionOnTop(getText("ContextMenu_DROP_CART"), playerNum, Trolley.onUnequipTrolley, item)
+        -- NO NEED this, `HeavyItem` already creat one option by Vanilla.
+        -- context:addOptionOnTop(getText("ContextMenu_DROP_CART"), playerNum, Trolley.onUnequipTrolley, item)
         return
     else
         local worldObjTable = Trolley.parseWorldObjects(worldobjects, playerNum)
@@ -190,10 +208,10 @@ Trolley.doFillWorldObjectContextMenu = function (playerNum, context, worldobject
             if item and item:hasTag('Trolley') then
                 local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))
                 if old_option then
-                    -- context:removeOptionByName(old_option.name) -- it might grab to bags.
+                    context:removeOptionByName(old_option.name)
                     context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onEquipTrolley, obj)
                     return
-                end                
+                end 
             end
         end
     end
@@ -204,13 +222,18 @@ Trolley.doInventoryContextMenu = function (playerNum, context, items)
     local playerObj = getSpecificPlayer(playerNum)
     local items = ISInventoryPane.getActualItems(items)
 
+    -- Trolly Item has tag `HeavyItem`, native will take care many things.
+
     for _, item in ipairs(items) do
         if item and item:hasTag('Trolley') then
             context:removeOptionByName(getText("ContextMenu_Equip_Two_Hands"))
             context:removeOptionByName(getText("ContextMenu_Unequip"))
-            local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))
-            if old_option then
-                -- context:removeOptionByName(old_option.name) -- it might grab to bags.
+
+            -- local old_option = context:getOptionFromName(getText("ContextMenu_Grab"))
+            -- NO Need this, `HeavyItem` don't have `Grab` option in Inventory.
+
+            if item ~= playerObj:getPrimaryHandItem() then
+                -- context:removeOptionByName(old_option.name)
                 if item:getContainer():getType() == "floor" then
                     context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onEquipTrolley, item:getWorldItem())
                     return
@@ -218,10 +241,9 @@ Trolley.doInventoryContextMenu = function (playerNum, context, items)
                     context:addOptionOnTop(getText("ContextMenu_TAKE_CART"), playerNum, Trolley.onGrabTrolleyFromContainer, item)
                     return
                 end
-            elseif item == playerObj:getPrimaryHandItem() then
-                context:addOptionOnTop(getText("ContextMenu_DROP_CART"), playerNum, Trolley.onUnequipTrolley, item)
-                return
             end
+
+            -- use native Drop.
         end
     end
 end

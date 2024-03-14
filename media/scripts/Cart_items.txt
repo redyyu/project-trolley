@@ -5,7 +5,7 @@ module PROJTrolley
 	}
 
 	item CartContainer {
-		Weight = 4,
+		Weight = 10,
 		Type = Container,
 		DisplayCategory = Container,
 		Capacity = 32,
@@ -27,7 +27,7 @@ module PROJTrolley
 		/* ReplaceInPrimaryHand = Bag_CartModel_RHand holdingtrolleyright, no clothingItem need, just give nothing. */
 		ReplaceInPrimaryHand = none holdingtrolleyright,
 
-		Tags = Trolley,
+		Tags = Trolley;HeavyItem,
     }
 
 	/*
