@@ -1,5 +1,5 @@
 IGUI_EN = {
 
-    IGUI_PlayerText_Cant_Take_This_Way = "Can't take cart this way."
+    IGUI_PlayerText_Cant_Take_Cart_This_Way = "I Can't take cart this way."
 
 }

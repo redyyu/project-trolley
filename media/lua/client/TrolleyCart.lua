@@ -95,7 +95,7 @@ Trolley.onTrolleyUpdate = function (playerObj)
     for idx, cart in ipairs(carts) do
         if equippedCart ~= cart then
             Trolley.dropCartInsanely(playerObj, cart)
-            playerObj:Say(getText("IGUI_PlayerText_Cant_Take_This_Way"))
+            playerObj:Say(getText("IGUI_PlayerText_Cant_Take_Cart_This_Way"))
         end
     end
 
