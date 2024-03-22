@@ -61,3 +61,30 @@ for _, item_type in ipairs(TROLLEY_TYPES) do
     table.insert(ProceduralDistributions["list"]["ToolStoreFarming"].items, item_type)
     table.insert(ProceduralDistributions["list"]["ToolStoreFarming"].items, 2)
 end
+
+
+
+local SPAWN_ROOMS = {
+    ["warehouse"] = 25,
+    ["garage_storage"] = 5,
+    ["storageunit"] = 5,
+}
+
+local function spawnTrolley(room)
+    local base_chance = SPAWN_ROOMS[room:getName()]
+    if base_chance ~= nil and ZombRand(1, 100) < base_chance then
+        local square = room:getRandomFreeSquare()
+        local num_type = ZombRand(1, #TROLLEY_TYPES)
+         square:AddWorldInventoryItem(TROLLEY_TYPES[num_type], ZombRand(0.1, 0.5), ZombRand(0.1, 0.5), 0)
+    end
+end
+
+local function spawnTrolleyInWarehouse(room)
+    roll = ZombRand(1, 5)
+    while roll > 0 do
+        spawnTrolley(room)
+        roll = roll - 1
+    end
+end
+
+Events.OnSeeNewRoom.Add(spawnTrolleyInWarehouse)
