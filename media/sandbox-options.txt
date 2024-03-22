@@ -1,6 +1,0 @@
-VERSION = 1,
-
-option PROJTrolley.SpawnChance {
-	type = integer, min = 1, max = 100, default = 50,
-	page = RavenCraft, translation = PROJTrolley_SPAWN_CHANCE,
-}

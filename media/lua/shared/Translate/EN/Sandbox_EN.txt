@@ -1,5 +1,0 @@
-Sandbox_EN = {
-	Sandbox_PROJTrolley = "Project Trolley"
-	Sandbox_PROJTrolley_SPAWN_CHANCE = "Spawn Chance"
-	Sandbox_PROJTrolley_SPAWN_CHANCE_tooltip = "Probability of trolley spawn by this mod."
-}
