@@ -8,7 +8,7 @@ module PROJTrolley
 		Weight = 10,
 		Type = Container,
 		DisplayCategory = Container,
-		Capacity = 48,
+		Capacity = 40,
 		WeightReduction = 99,
 		DisplayName = Trolley Cart,
 		Icon = TrolleyCart,
