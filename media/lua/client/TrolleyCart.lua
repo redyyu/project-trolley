@@ -8,7 +8,7 @@ local Trolley = {}
 
 Trolley.getTrolleysFromInvertory = function (playerInv)
     local trolley_items = {}
-    local items = playerInv:getItems()
+    local items = playerInv:getAllCategory("Container")
     for j = 0, items:size() - 1 do
         local item = items:get(j)
         if item:hasTag('Trolley') then

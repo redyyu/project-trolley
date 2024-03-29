@@ -8,8 +8,8 @@ module PROJTrolley
 		Weight = 10,
 		Type = Container,
 		DisplayCategory = Container,
-		Capacity = 32,
-		WeightReduction = 98,
+		Capacity = 48,
+		WeightReduction = 99,
 		DisplayName = Trolley Cart,
 		Icon = TrolleyCart,
 
@@ -18,7 +18,7 @@ module PROJTrolley
 		SurvivalGear  = TRUE,
 		EquippedNoSprint = TRUE,
 		RequiresEquippedBothHands = TRUE,
-		RunSpeedModifier = 0.45,
+		RunSpeedModifier = 0.55,
         MetalValue = 40,
 
 		StaticModel = TrolleyCart,
